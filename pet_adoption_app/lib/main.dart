@@ -1,0 +1,145 @@
+// ================================ JIKA GAMBAR TIDAK BERJALAN ===========================================
+// flutter run -d chrome --web-renderer html
+// https://ubaya.me/phpMyAdmin/index.php?route=/database/structure&db=flutter_160421010
+
+// ignore_for_file: depend_on_referenced_packages
+
+import 'package:flutter/material.dart';
+import 'package:pet_adoption_app/screen/login.dart';
+import 'package:pet_adoption_app/screen/register.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+String activeUser = "";
+String activeRole = "";
+
+Future<Map<String, String>> checkUser() async {
+  final prefs = await SharedPreferences.getInstance();
+  String username = prefs.getString("username") ?? '';
+  String role = prefs.getString("role") ?? '';
+  return {'username': username, 'role': role};
+}
+
+
+void main() {
+  // runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  checkUser().then((Map<String, String> result) {
+    if (result['username'] == '' && result['role'] == '') {
+      runApp(const Login());
+    } else {
+      activeUser = result['username']!;
+      activeRole = result['role']!;
+      runApp(const MyApp());
+    }
+  });
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Pet Adoption - Main',
+      routes: {
+        'Login': (context) => const Login(),
+        'Register': (context) => const Register(),
+      },
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+
+  void doLogout() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove("username");
+    main();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+
+      drawer: myDrawer(),
+      persistentFooterButtons: <Widget>[
+        ElevatedButton(
+          onPressed: () {},
+          child: const Icon(Icons.skip_previous),
+        ),
+        ElevatedButton(
+          onPressed: () {},
+          child: const Icon(Icons.skip_next),
+        ),
+      ],
+
+      bottomNavigationBar: BottomNavigationBar(
+          currentIndex:
+              0, //menunjukkan halaman apa yang aktif (item 0 merupakan item yang aktif)
+          fixedColor: Colors.teal,
+          items: const [
+            BottomNavigationBarItem(
+              label: "Home",
+              icon: Icon(Icons.home),
+            ),
+            BottomNavigationBarItem(
+              label: "Search",
+              icon: Icon(Icons.search),
+            ),
+            BottomNavigationBarItem(
+              label: "History",
+              icon: Icon(Icons.map),
+            ),
+            BottomNavigationBarItem(
+              label: "Foto",
+              icon: Icon(Icons.photo),
+            ),
+          ],),
+    );
+  }
+
+  Drawer myDrawer() {
+    return Drawer(
+      elevation: 16.0,
+      child: Column(
+        children: <Widget>[
+          UserAccountsDrawerHeader(
+              accountName: Text(activeUser),
+              accountEmail: Text(activeRole),
+              currentAccountPicture: const CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrSEirW23rUGMO8Kv_CkiiLyupMAeytR5nA0akQUT25JCzGDhDgfwSpx_R8sT_iY7sfzI&usqp=CAU"))),
+          ListTile(
+            title: new Text(activeUser != "" ? "Logout" : "Login"),
+            leading: const Icon(Icons.login),
+            onTap: () {
+              activeUser != ""
+                  ? doLogout()
+                  : Navigator.pushNamed(context, "loginForm");
+            },
+          ),
+          const Divider(
+            height: 10,
+          ),
+        ],
+      ),
+    );
+  }
+}
