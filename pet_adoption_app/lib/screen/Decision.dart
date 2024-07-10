@@ -86,8 +86,9 @@ Widget DaftarHewan(PopPets) {
         itemCount: PopPets.length,
         itemBuilder: (BuildContext context, int index) {
           return Card(
+              elevation: 10,
               margin: const EdgeInsets.only(
-                  bottom: 20, left: 20, right: 20, top: 20),
+                  bottom: 20, left: 20, right: 20, top: 10),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -136,28 +137,6 @@ Widget DaftarHewan(PopPets) {
                           );
                         }),
                   ),
-                  // Row(
-                  //   children: [
-                  //     ElevatedButton(
-                  //       onPressed: () {
-                  //         // Navigator.push(
-                  //         //   context,
-                  //         //   MaterialPageRoute(
-                  //         //       builder: (context) => EditPopMovie(
-                  //         //             PMs[index].id,
-                  //         //           )),
-                  //         // );
-                  //       },
-                  //       child: const Text('Edit'),
-                  //     ),
-                  //     // ElevatedButton(
-                  //     //   onPressed: () {
-                  //     //     delete(PMs[index].id);
-                  //     //   },
-                  //     //   child: const Text('Delete'),
-                  //     // ),
-                  //   ],
-                  // )
                 ],
               ));
         });

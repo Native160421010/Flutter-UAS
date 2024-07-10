@@ -7,6 +7,7 @@
 import 'package:flutter/material.dart';
 import 'package:pet_adoption_app/screen/Decision.dart';
 import 'package:pet_adoption_app/screen/NewOffer.dart';
+import 'package:pet_adoption_app/screen/OfferHistory.dart';
 import 'package:pet_adoption_app/screen/browse.dart';
 import 'package:pet_adoption_app/screen/login.dart';
 import 'package:pet_adoption_app/screen/register.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         'MainScreen': (context) => const MainScreen(),
         'Browse': (context) =>  BrowsePage(),
         'NewOffer': (context) => const NewOffer(),
+        'OfferHistory': (context) => const OfferHistory(),
         'Decision': (context) => const Decision(),
         'Offer': (context) => const OfferPage(),
         'Adopt': (context) => const AdoptPage(),
@@ -181,10 +183,10 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           ListTile(
-            title: const Text('Adoption Offer'),
+            title: const Text('Your Offers'),
             leading: const Icon(Icons.list_alt),
             onTap: () {
-              Navigator.pushNamed(context, "");
+              Navigator.pushNamed(context, "OfferHistory");
             },
           ),
           ListTile(

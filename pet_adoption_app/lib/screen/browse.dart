@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_adoption_app/class/pet.dart';
 import 'package:http/http.dart' as http;
 import 'package:pet_adoption_app/screen/propose.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 List<Pets> hewan = [];
 String _txtcari = " ";
@@ -13,9 +14,15 @@ String _txtcari = " ";
 String _temp = 'waiting API respond…';
 
 Future<String> fetchData() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String username = prefs.getString('username') ??
+      '';
+
   final response = await http.post(
-      Uri.parse("https://ubaya.me/flutter/160421010/Pet/petslist.php"),
-      body: {'cari': _txtcari});
+    Uri.parse("https://ubaya.me/flutter/160421010/Pet/petslist.php"),
+    body: {'cari': _txtcari, 'username_reviewee': username},
+  );
+
   if (response.statusCode == 200) {
     return response.body;
   } else {
