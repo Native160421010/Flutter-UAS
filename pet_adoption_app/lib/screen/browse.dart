@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:pet_adoption_app/class/pet.dart';
 import 'package:http/http.dart' as http;
-import 'package:pet_adoption_app/screen/Adoption.dart';
+import 'package:pet_adoption_app/screen/propose.dart';
 
 List<Pets> hewan = [];
 String _txtcari = " ";
@@ -130,8 +130,8 @@ Widget DaftarHewan(PopPets) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Adoption(
-                                      hewan[index].id,
+                                builder: (context) => Propose(
+                                      petID: hewan[index].id,
                                     )),
                           );
                         }),
