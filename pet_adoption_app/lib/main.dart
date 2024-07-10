@@ -5,6 +5,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
+import 'package:pet_adoption_app/screen/Decision.dart';
 import 'package:pet_adoption_app/screen/NewOffer.dart';
 import 'package:pet_adoption_app/screen/browse.dart';
 import 'package:pet_adoption_app/screen/login.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
         'MainScreen': (context) => const MainScreen(),
         'Browse': (context) =>  BrowsePage(),
         'NewOffer': (context) => const NewOffer(),
+        'Decision': (context) => const Decision(),
         'Offer': (context) => const OfferPage(),
         'Adopt': (context) => const AdoptPage(),
       },
