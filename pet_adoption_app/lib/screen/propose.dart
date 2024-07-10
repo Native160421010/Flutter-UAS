@@ -24,8 +24,7 @@ class _ProposeState extends State<Propose> {
   Future<String> fetchData() async {
     final response = await http.post(
       Uri.parse("https://ubaya.me/flutter/160421010/UAS/Propose/detailpropose.php"),
-      body: {'id': widget.petID.toString()},
-    );
+      body: {'id': widget.petID.toString()},);
     if (response.statusCode == 200) {
       return response.body;
     } else {
