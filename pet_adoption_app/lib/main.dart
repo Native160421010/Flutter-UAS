@@ -5,6 +5,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
+import 'package:pet_adoption_app/screen/NewOffer.dart';
 import 'package:pet_adoption_app/screen/browse.dart';
 import 'package:pet_adoption_app/screen/login.dart';
 import 'package:pet_adoption_app/screen/register.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
         'Register': (context) => const Register(),
         'MainScreen': (context) => const MainScreen(),
         'Browse': (context) =>  BrowsePage(),
+        'NewOffer': (context) => const NewOffer(),
         'Offer': (context) => const OfferPage(),
         'Adopt': (context) => const AdoptPage(),
       },
@@ -91,28 +93,28 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+            const Text(
               'Welcome to the Main Screen!',
               style: TextStyle(fontSize: 24),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, 'Browse');
               },
-              child: Text('Go to Browse'),
+              child: const Text('Go to Browse'),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, 'Offer');
               },
-              child: Text('Go to Offer'),
+              child: const Text('Go to Offer'),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, 'Adopt');
               },
-              child: Text('Go to Adopt'),
+              child: const Text('Go to Adopt'),
             ),
           ],
         ),
@@ -170,6 +172,13 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           ListTile(
+            title: const Text('New Offer'),
+            leading: const Icon(Icons.add),
+            onTap: () {
+              Navigator.pushNamed(context, "NewOffer");
+            },
+          ),
+          ListTile(
             title: const Text('Adoption Offer'),
             leading: const Icon(Icons.list_alt),
             onTap: () {
@@ -197,34 +206,34 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Main Screen'),
+        title: const Text('Main Screen'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+            const Text(
               'Welcome to the Main Screen!',
               style: TextStyle(fontSize: 24),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, 'Browse');
               },
-              child: Text('Go to Browse'),
+              child: const Text('Go to Browse'),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, 'Offer');
               },
-              child: Text('Go to Offer'),
+              child: const Text('Go to Offer'),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, 'Adopt');
               },
-              child: Text('Go to Adopt'),
+              child: const Text('Go to Adopt'),
             ),
           ],
         ),

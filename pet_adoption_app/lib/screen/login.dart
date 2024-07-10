@@ -49,7 +49,6 @@ class _LoginState extends State<LoginForm> {
       if (json['result'] == 'success') {
         final prefs = await SharedPreferences.getInstance();
         prefs.setString("username", json['username']);
-        prefs.setString("role", json['role'] == '1' ? 'Admin' : 'Adoptee');
         main();
       } else {
         setState(() {
