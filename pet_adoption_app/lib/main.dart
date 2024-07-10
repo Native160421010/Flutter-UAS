@@ -5,6 +5,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
+import 'package:pet_adoption_app/screen/browse.dart';
 import 'package:pet_adoption_app/screen/login.dart';
 import 'package:pet_adoption_app/screen/register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,9 +20,7 @@ Future<Map<String, String>> checkUser() async {
   return {'username': username, 'role': role};
 }
 
-
 void main() {
-  // runApp(const MyApp());
   WidgetsFlutterBinding.ensureInitialized();
   checkUser().then((Map<String, String> result) {
     if (result['username'] == '' && result['role'] == '') {
@@ -44,12 +43,16 @@ class MyApp extends StatelessWidget {
       routes: {
         'Login': (context) => const Login(),
         'Register': (context) => const Register(),
+        'MainScreen': (context) => const MainScreen(),
+        'Browse': (context) =>  BrowsePage(),
+        'Offer': (context) => const OfferPage(),
+        'Adopt': (context) => const AdoptPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: activeUser == "" ? const Login() : const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -68,50 +71,74 @@ class _MyHomePageState extends State<MyHomePage> {
   void doLogout() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove("username");
-    main();
+    prefs.remove("role");
+    setState(() {
+      activeUser = "";
+      activeRole = "";
+    });
+    runApp(const MyApp());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text(widget.title),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-
       drawer: myDrawer(),
-      persistentFooterButtons: <Widget>[
-        ElevatedButton(
-          onPressed: () {},
-          child: const Icon(Icons.skip_previous),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Welcome to the Main Screen!',
+              style: TextStyle(fontSize: 24),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, 'Browse');
+              },
+              child: Text('Go to Browse'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, 'Offer');
+              },
+              child: Text('Go to Offer'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, 'Adopt');
+              },
+              child: Text('Go to Adopt'),
+            ),
+          ],
         ),
-        ElevatedButton(
-          onPressed: () {},
-          child: const Icon(Icons.skip_next),
-        ),
-      ],
-
+      ),
       bottomNavigationBar: BottomNavigationBar(
-          currentIndex:
-              0, //menunjukkan halaman apa yang aktif (item 0 merupakan item yang aktif)
-          fixedColor: Colors.teal,
-          items: const [
-            BottomNavigationBarItem(
-              label: "Home",
-              icon: Icon(Icons.home),
-            ),
-            BottomNavigationBarItem(
-              label: "Search",
-              icon: Icon(Icons.search),
-            ),
-            BottomNavigationBarItem(
-              label: "History",
-              icon: Icon(Icons.map),
-            ),
-            BottomNavigationBarItem(
-              label: "Foto",
-              icon: Icon(Icons.photo),
-            ),
-          ],),
+        currentIndex: 0,
+        fixedColor: Colors.teal,
+        items: const [
+          BottomNavigationBarItem(
+            label: "Home",
+            icon: Icon(Icons.home),
+          ),
+          BottomNavigationBarItem(
+            label: "Search",
+            icon: Icon(Icons.search),
+          ),
+          BottomNavigationBarItem(
+            label: "History",
+            icon: Icon(Icons.map),
+          ),
+          BottomNavigationBarItem(
+            label: "Foto",
+            icon: Icon(Icons.photo),
+          ),
+        ],
+      ),
     );
   }
 
@@ -121,24 +148,105 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Column(
         children: <Widget>[
           UserAccountsDrawerHeader(
-              accountName: Text(activeUser),
-              accountEmail: Text(activeRole),
-              currentAccountPicture: const CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrSEirW23rUGMO8Kv_CkiiLyupMAeytR5nA0akQUT25JCzGDhDgfwSpx_R8sT_iY7sfzI&usqp=CAU"))),
+            accountName: Text(activeUser),
+            accountEmail: Text(activeRole),
+            currentAccountPicture: const CircleAvatar(
+              backgroundImage: NetworkImage(
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrSEirW23rUGMO8Kv_CkiiLyupMAeytR5nA0akQUT25JCzGDhDgfwSpx_R8sT_iY7sfzI&usqp=CAU"),
+            ),
+          ),
           ListTile(
-            title: new Text(activeUser != "" ? "Logout" : "Login"),
+            title: Text(activeUser != "" ? "Logout" : "Login"),
             leading: const Icon(Icons.login),
             onTap: () {
-              activeUser != ""
-                  ? doLogout()
-                  : Navigator.pushNamed(context, "loginForm");
+              activeUser != "" ? doLogout() : Navigator.pushNamed(context, "Login");
             },
           ),
-          const Divider(
-            height: 10,
-          ),
+          const Divider(height: 10),
         ],
+      ),
+    );
+  }
+}
+
+class MainScreen extends StatelessWidget {
+  const MainScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Main Screen'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Welcome to the Main Screen!',
+              style: TextStyle(fontSize: 24),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, 'Browse');
+              },
+              child: Text('Go to Browse'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, 'Offer');
+              },
+              child: Text('Go to Offer'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, 'Adopt');
+              },
+              child: Text('Go to Adopt'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+class OfferPage extends StatelessWidget {
+  const OfferPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Offer'),
+      ),
+      body: Center(
+        child: Text(
+          'This is the Offer Page',
+          style: TextStyle(fontSize: 24),
+        ),
+      ),
+    );
+  }
+}
+
+class AdoptPage extends StatelessWidget {
+  const AdoptPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Adopt'),
+      ),
+      body: Center(
+        child: Text(
+          'This is the Adopt Page',
+          style: TextStyle(fontSize: 24),
+        ),
       ),
     );
   }
