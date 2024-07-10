@@ -156,6 +156,27 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           ListTile(
+            title: const Text('Browse'),
+            leading: const Icon(Icons.search),
+            onTap: () {
+              Navigator.pushNamed(context, "Browse");
+            },
+          ),
+          ListTile(
+            title: const Text('Propose History'),
+            leading: const Icon(Icons.catching_pokemon),
+            onTap: () {
+              Navigator.pushNamed(context, "");
+            },
+          ),
+          ListTile(
+            title: const Text('Adoption Offer'),
+            leading: const Icon(Icons.list_alt),
+            onTap: () {
+              Navigator.pushNamed(context, "");
+            },
+          ),
+          ListTile(
             title: Text(activeUser != "" ? "Logout" : "Login"),
             leading: const Icon(Icons.login),
             onTap: () {
