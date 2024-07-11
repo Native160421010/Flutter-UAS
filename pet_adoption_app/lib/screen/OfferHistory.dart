@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:pet_adoption_app/class/pet.dart';
 import 'package:http/http.dart' as http;
+import 'package:pet_adoption_app/screen/EditOffer.dart';
 import 'package:pet_adoption_app/screen/propose.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -80,7 +81,7 @@ class _OfferHistoryPageState extends State<OfferHistory> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Browse'),
+        title: const Text('Offer History'),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -99,7 +100,7 @@ class _OfferHistoryPageState extends State<OfferHistory> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  Propose(petID: hewan[index].id),
+                                  EditOffer(petID: hewan[index].id),
                             ),
                           );
                         },
@@ -146,9 +147,14 @@ class _OfferHistoryPageState extends State<OfferHistory> {
                                   const SizedBox(height: 8),
                                   Text(
                                     'Status: ${hewan[index].keterangan}',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontStyle: FontStyle.italic,
+                                      fontWeight: FontWeight.bold,
                                       fontSize: 12,
+                                      color:
+                                          hewan[index].keterangan == 'Available'
+                                              ? Colors.green
+                                              : Colors.red,
                                     ),
                                   ),
                                 ],

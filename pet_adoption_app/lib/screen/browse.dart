@@ -15,8 +15,7 @@ String _temp = 'waiting API respond…';
 
 Future<String> fetchData() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String username = prefs.getString('username') ??
-      '';
+  String username = prefs.getString('username') ?? '';
 
   final response = await http.post(
     Uri.parse("https://ubaya.me/flutter/160421010/Pet/petslist.php"),
@@ -129,9 +128,16 @@ Widget DaftarHewan(PopPets) {
                           Text(hewan[index].description,
                               style: const TextStyle(
                                   fontStyle: FontStyle.italic, fontSize: 10)),
-                          Text('Status: ${PopPets[index].keterangan}',
-                              style: const TextStyle(
-                                  fontStyle: FontStyle.italic, fontSize: 10))
+                          Text(
+                            'Status: ${PopPets[index].keterangan}',
+                            style: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              fontSize: 12,
+                              color: PopPets[index].keterangan == 'Available'
+                                  ? Colors.green
+                                  : Colors.red,
+                            ),
+                          ),
                         ]),
                         onTap: () {
                           Navigator.push(
