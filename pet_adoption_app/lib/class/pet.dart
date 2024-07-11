@@ -31,7 +31,11 @@ class Pets {
         nama: json['nama'] as String,
         jenis: json['jenis'] as String,
         lokasi: json['lokasi'] as String,
-        age: json['age'] == 0 ? 'Young' : 'Old',
+        age: json['age'] == 0
+            ? 'Young'
+            : json['coat_length'] == 1
+                ? 'Middle-Aged'
+                : 'Old',
         gender: json['gender'] == 0 ? 'Male' : 'Female',
         coat_length: json['coat_length'] == 0
             ? 'Short'

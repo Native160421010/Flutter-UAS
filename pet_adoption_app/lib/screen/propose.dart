@@ -106,6 +106,17 @@ class _ProposeState extends State<Propose> {
             Text('${_pm!.jenis} . ${_pm!.lokasi}',
                 style:
                     const TextStyle(fontStyle: FontStyle.italic, fontSize: 10)),
+            Text(
+              'Status: ${_pm!.keterangan}',
+              style: TextStyle(
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                color: _pm!.keterangan == 'Available'
+                    ? Colors.green
+                    : Colors.red,
+              ),
+            ),
             const Divider(
               height: 15,
             ),
@@ -164,10 +175,11 @@ class _ProposeState extends State<Propose> {
             Text(_pm!.description,
                 style:
                     const TextStyle(fontStyle: FontStyle.italic, fontSize: 10)),
-            Text('Status: ${_pm!.keterangan}',
-                style:
-                    const TextStyle(fontStyle: FontStyle.italic, fontSize: 10)),
-            Text('Previous Owner: ${_pm!.username_reviewee}',
+            const Padding(
+                padding: EdgeInsets.all(0),
+                child: Text("Previous Owner",
+                    style: TextStyle(fontWeight: FontWeight.bold))),
+            Text(_pm!.username_reviewee,
                 style:
                     const TextStyle(fontStyle: FontStyle.italic, fontSize: 10)),
             ElevatedButton(
