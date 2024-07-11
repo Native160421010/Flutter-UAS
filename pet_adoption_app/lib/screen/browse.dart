@@ -9,7 +9,7 @@ import 'package:pet_adoption_app/screen/propose.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 List<Pets> hewan = [];
-String _txtcari = " ";
+String _txtcari = "";
 
 String _temp = 'waiting API respond…';
 

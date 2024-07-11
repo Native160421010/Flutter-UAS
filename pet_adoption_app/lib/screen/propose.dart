@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pet_adoption_app/class/pet.dart';
+import 'package:pet_adoption_app/screen/adopt.dart';
 import 'package:pet_adoption_app/screen/login.dart';
 
 class Propose extends StatefulWidget {
@@ -176,7 +177,7 @@ class _ProposeState extends State<Propose> {
                   context,
 
                   // EDIT SINI MIKE ======================================================================
-                  MaterialPageRoute(builder: (context) => Login()),
+                  MaterialPageRoute(builder: (context) => Adopt()),
                 );
               },
               child: const Text('Adopt'),

@@ -86,7 +86,7 @@ class _ProposeState extends State<Propose> {
         Padding(
           padding: const EdgeInsets.all(10),
           child:
-              Text(_pm!.username_reviewe, style: const TextStyle(fontSize: 15)),
+              Text(_pm!.username_reviewee, style: const TextStyle(fontSize: 15)),
         ),
         const Padding(
           padding: EdgeInsets.all(10),
