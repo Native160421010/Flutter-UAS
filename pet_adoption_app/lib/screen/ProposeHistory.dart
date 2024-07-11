@@ -16,7 +16,7 @@ Future<String> fetchData() async {
 
   final response = await http.post(
     Uri.parse("https://ubaya.me/flutter/160421010/UAS/Propose/proposehistory.php"),
-    body: {'nama': username},
+    body: {'username': username},
   );
 
   if (response.statusCode == 200) {
