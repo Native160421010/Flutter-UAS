@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
+import 'package:pet_adoption_app/class/health.dart';
 import 'package:pet_adoption_app/class/karakter.dart';
 import 'package:pet_adoption_app/class/pet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,6 +25,7 @@ class _EditOfferState extends State<EditOffer> {
   final _formKey = GlobalKey<FormState>();
 
   Widget comboKarakter = const Text('tambah karakter');
+  Widget comboHealth = const Text('tambah health');
 
   int _id = 0;
   String _nama = "";
@@ -96,6 +98,7 @@ class _EditOfferState extends State<EditOffer> {
     super.initState();
     bacaData();
     generateComboKarakter();
+    generateComboHealth();
   }
 
   void Edit() async {
@@ -139,6 +142,22 @@ class _EditOfferState extends State<EditOffer> {
     }
   }
 
+  Future<List> daftarHealth() async {
+    Map json;
+    final response = await http.post(
+        Uri.parse(
+            "https://ubaya.me/flutter/160421010/UAS/Health/HealthList.php"),
+        body: {'pet_id': widget.petID.toString()});
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      json = jsonDecode(response.body);
+      return json['data'];
+    } else {
+      throw Exception('Failed to read API');
+    }
+  }
+
   void generateComboKarakter() {
     List<Karakter> karakter;
     var data = daftarKarakter();
@@ -149,7 +168,7 @@ class _EditOfferState extends State<EditOffer> {
       setState(() {
         comboKarakter = DropdownButton(
             dropdownColor: Colors.grey[100],
-            hint: const Text("tambah karakter"),
+            hint: const Text("Tambah Karakter"),
             isDense: false,
             items: karakter.map((kar) {
               return DropdownMenuItem(
@@ -164,9 +183,35 @@ class _EditOfferState extends State<EditOffer> {
     });
   }
 
+  void generateComboHealth() {
+    List<Health> health;
+    var data = daftarHealth();
+    data.then((value) {
+      health = List<Health>.from(value.map((i) {
+        return Health.fromJSON(i);
+      }));
+      setState(() {
+        comboHealth = DropdownButton(
+            dropdownColor: Colors.grey[100],
+            hint: const Text("Tambah Health"),
+            isDense: false,
+            items: health.map((kar) {
+              return DropdownMenuItem(
+                value: kar.health_id,
+                child: Text(kar.health_name, overflow: TextOverflow.visible),
+              );
+            }).toList(),
+            onChanged: (value) {
+              addHealth(value);
+            });
+      });
+    });
+  }
+
   void addKarakter(karakter_id) async {
     final response = await http.post(
-        Uri.parse("https://ubaya.me/flutter/160421010/UAS/Karakter/AddKarakterPets.php"),
+        Uri.parse(
+            "https://ubaya.me/flutter/160421010/UAS/Karakter/AddKarakterPets.php"),
         body: {
           'karakter_id': karakter_id.toString(),
           'pets_id': widget.petID.toString()
@@ -175,8 +220,31 @@ class _EditOfferState extends State<EditOffer> {
       print(response.body);
       Map json = jsonDecode(response.body);
       if (json['result'] == 'success') {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Sukses menambah karakter')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Sukses menambah karakteristik!')));
+        setState(() {
+          bacaData();
+        });
+      }
+    } else {
+      throw Exception('Failed to read API');
+    }
+  }
+
+  void addHealth(health_id) async {
+    final response = await http.post(
+        Uri.parse(
+            "https://ubaya.me/flutter/160421010/UAS/Health/AddHealthPets.php"),
+        body: {
+          'health_id': health_id.toString(),
+          'pets_id': widget.petID.toString()
+        });
+    if (response.statusCode == 200) {
+      print(response.body);
+      Map json = jsonDecode(response.body);
+      if (json['result'] == 'success') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Sukses menambah data kesehatan!')));
         setState(() {
           bacaData();
         });
@@ -369,6 +437,27 @@ class _EditOfferState extends State<EditOffer> {
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: comboKarakter,
               ),
+              const Padding(
+                  padding: EdgeInsets.all(10), child: Text('Health:')),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _pm?.health?.length ?? 0,
+                  itemBuilder: (BuildContext ctxt, int index) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(_pm!.health?[index]['health_name']),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: comboHealth,
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: ElevatedButton(
@@ -384,7 +473,7 @@ class _EditOfferState extends State<EditOffer> {
                       Edit();
                     }
                   },
-                  child: const Text('Submit Offer'),
+                  child: const Text('Edit Offer'),
                 ),
               ),
             ],

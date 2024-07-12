@@ -49,11 +49,20 @@ class _LoginState extends State<LoginForm> {
       if (json['result'] == 'success') {
         final prefs = await SharedPreferences.getInstance();
         prefs.setString("username", json['username']);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(json['message']),
+          ),
+        );
+
         main();
       } else {
-        setState(() {
-          errorLogin = "Incorrect username or password";
-        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(json['message']),
+          ),
+        );
       }
     } else {
       throw Exception('Failed to read API');

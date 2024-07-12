@@ -35,7 +35,6 @@ class RegisterForm extends StatefulWidget {
 String username = "";
 String password = "";
 String passwordCon = "";
-String errorRegister = "";
 
 class _RegisterState extends State<RegisterForm> {
   void doRegister() async {
@@ -45,14 +44,25 @@ class _RegisterState extends State<RegisterForm> {
           body: {'username': username, 'password': password});
 
       if (response.statusCode == 200) {
-        Map json = jsonDecode(response.body);
+        Map<String, dynamic> json = jsonDecode(response.body);
         if (json['result'] == 'success') {
+          setState(() {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(json['message']),
+              ),
+            );
+          });
           final prefs = await SharedPreferences.getInstance();
           prefs.setString("username", json['username']);
           main();
         } else {
           setState(() {
-            errorRegister = "json['message']";
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(json['message']),
+              ),
+            );
           });
         }
       } else {
@@ -122,8 +132,8 @@ class _RegisterState extends State<RegisterForm> {
                 child: Container(
                   height: 50,
                   width: 300,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20)),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(20)),
                   child: ElevatedButton(
                     onPressed: () {
                       doRegister();
@@ -147,4 +157,3 @@ class _RegisterState extends State<RegisterForm> {
         ));
   }
 }
- 

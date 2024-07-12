@@ -68,7 +68,7 @@ class _ProposeState extends State<Propose> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detail of Popular Movie'),
+        title: const Text('Pet Detail'),
       ),
       body: _pm == null
           ? const Center(child: CircularProgressIndicator())
@@ -189,7 +189,7 @@ class _ProposeState extends State<Propose> {
                   context,
 
                   // EDIT SINI MIKE ======================================================================
-                  MaterialPageRoute(builder: (context) => Adopt()),
+                  MaterialPageRoute(builder: (context) => Adopt(petID: widget.petID)),
                 );
               },
               child: const Text('Adopt'),

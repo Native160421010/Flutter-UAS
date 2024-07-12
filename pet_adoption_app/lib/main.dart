@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_adoption_app/screen/Decision.dart';
 import 'package:pet_adoption_app/screen/NewOffer.dart';
 import 'package:pet_adoption_app/screen/OfferHistory.dart';
+import 'package:pet_adoption_app/screen/ProposeHistory.dart';
 import 'package:pet_adoption_app/screen/browse.dart';
 import 'package:pet_adoption_app/screen/login.dart';
 import 'package:pet_adoption_app/screen/register.dart';
@@ -46,19 +47,17 @@ class MyApp extends StatelessWidget {
       routes: {
         'Login': (context) => const Login(),
         'Register': (context) => const Register(),
-        'MainScreen': (context) => const MainScreen(),
         'Browse': (context) =>  BrowsePage(),
         'NewOffer': (context) => const NewOffer(),
+        'ProposeHistory': (context) => const ProposeHistory(),
         'OfferHistory': (context) => const OfferHistory(),
         'Decision': (context) => const Decision(),
-        'Offer': (context) => const OfferPage(),
-        'Adopt': (context) => const AdoptPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: activeUser == "" ? const Login() : const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: activeUser == "" ? const Login() : const MyHomePage(title: 'Home Page'),
     );
   }
 }
@@ -93,33 +92,15 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       drawer: myDrawer(),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'Welcome to the Main Screen!',
+            Text(
+              'Welcome to ADOPSIAN!',
               style: TextStyle(fontSize: 24),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, 'Browse');
-              },
-              child: const Text('Go to Browse'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, 'Offer');
-              },
-              child: const Text('Go to Offer'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, 'Adopt');
-              },
-              child: const Text('Go to Adopt'),
-            ),
+            SizedBox(height: 20),
           ],
         ),
       ),
@@ -172,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
             title: const Text('Propose History'),
             leading: const Icon(Icons.catching_pokemon),
             onTap: () {
-              Navigator.pushNamed(context, "");
+              Navigator.pushNamed(context, "ProposeHistory");
             },
           ),
           ListTile(
@@ -198,89 +179,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           const Divider(height: 10),
         ],
-      ),
-    );
-  }
-}
-
-class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Main Screen'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Welcome to the Main Screen!',
-              style: TextStyle(fontSize: 24),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, 'Browse');
-              },
-              child: const Text('Go to Browse'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, 'Offer');
-              },
-              child: const Text('Go to Offer'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, 'Adopt');
-              },
-              child: const Text('Go to Adopt'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-
-class OfferPage extends StatelessWidget {
-  const OfferPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Offer'),
-      ),
-      body: Center(
-        child: Text(
-          'This is the Offer Page',
-          style: TextStyle(fontSize: 24),
-        ),
-      ),
-    );
-  }
-}
-
-class AdoptPage extends StatelessWidget {
-  const AdoptPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Adopt'),
-      ),
-      body: Center(
-        child: Text(
-          'This is the Adopt Page',
-          style: TextStyle(fontSize: 24),
-        ),
       ),
     );
   }

@@ -1,52 +1,49 @@
+// ignore_for_file: depend_on_referenced_packages, non_constant_identifier_names
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:pet_adoption_app/class/pet.dart';
 import 'package:http/http.dart' as http;
+import 'package:pet_adoption_app/class/proposal.dart';
+import 'package:pet_adoption_app/screen/EditOffer.dart';
 import 'package:pet_adoption_app/screen/propose.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-List<Pets> listPropose = [];
+List<Proposal> proposal = [];
 
 String _temp = 'waiting API respond…';
 
-Future<String> fetchData() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String username = prefs.getString('username') ?? '';
+// Future<String> fetchData() async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   String? username = prefs.getString('username');
 
-  final response = await http.post(
-    Uri.parse("https://ubaya.me/flutter/160421010/UAS/Propose/proposehistory.php"),
-    body: {'username': username},
-  );
+//   final response = await http.post(
+//     Uri.parse(
+//         "https://ubaya.me/flutter/160421010/UAS/Propose/ProposeHistory.php"),
+//         // "https://ubaya.me/flutter/160421010/Pet/YourPetsList.php"),
+//     body: {'username': 2},
+//   );
 
-  if (response.statusCode == 200) {
-    return response.body;
-  } else {
-    throw Exception('Failed to read API');
-  }
-}
+//   if (response.statusCode == 200) {
+//     return response.body;
+//   } else {
+//     throw Exception('Failed to read API');
+//   }
+// }
 
-class Proposehistory extends StatefulWidget {
-  const Proposehistory({super.key});
+class ProposeHistory extends StatefulWidget {
+  const ProposeHistory({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return _ProposalHistoryState();
+    return _ProposeHistoryPageState();
   }
 }
 
-class _ProposalHistoryState extends State<Proposehistory> {
-  bacaData() {
-    listPropose.clear();
-    Future<String> data = fetchData();
-    data.then((value) {
-      Map json = jsonDecode(value);
-      for (var pet in json['data']) {
-        Pets pm = Pets.fromJson(pet);
-        listPropose.add(pm);
-      }
-    });
-  }
+class _ProposeHistoryPageState extends State<ProposeHistory> {
+  List<Proposal> proposal = [];
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -54,91 +51,112 @@ class _ProposalHistoryState extends State<Proposehistory> {
     bacaData();
   }
 
+  Future<void> bacaData() async {
+    proposal.clear();
+    try {
+      String? username = await SharedPreferences.getInstance()
+          .then((prefs) => prefs.getString('username'));
+
+      final response = await http.post(
+        Uri.parse(
+            "https://ubaya.me/flutter/160421010/UAS/Propose/ProposeHistory.php"),
+        body: {'username': username},
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> json = jsonDecode(response.body);
+        if (json['result'] == "success") {
+          List<dynamic> data = json['data'];
+          setState(() {
+            proposal = data.map((prop) => Proposal.fromJson(prop)).toList();
+            isLoading = false;
+          });
+        } else {
+          throw Exception('Failed to load proposal');
+        }
+      } else {
+        throw Exception('Failed to load proposal');
+      }
+    } catch (e) {
+      print('Error: $e');
+      // Handle error, e.g., show a dialog or message to the user
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Propose History'),
+        title: const Text('Offer History'),
       ),
-      body: ListView(
-        children: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            // -400
-            child: DaftarPropose(listPropose),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-Widget DaftarPropose(PopPets) {
-  if (PopPets != null) {
-    return ListView.builder(
-        itemCount: PopPets.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Card(
-              margin: const EdgeInsets.only(
-                  bottom: 20, left: 20, right: 20, top: 20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  ListTile(
-                    title: GestureDetector(
-                        child: Column(children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Container(
-                              width: 300.0,
-                              height: 150.0,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                        'https://ubaya.me/flutter/160421010/Pet/Gambar/${PopPets[index].id}.jpg')),
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(8.0)),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: proposal.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Card(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 150.0,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                    'https://ubaya.me/flutter/160421010/Pet/Gambar/${proposal[index].pet_id}.jpg'),
                               ),
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
                           ),
-                          Text(listPropose[index].nama,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
-                          Text(listPropose[index].jenis,
-                              style: const TextStyle(
-                                  fontStyle: FontStyle.italic, fontSize: 10)),
-                          const Divider(
-                            height: 15,
-                          ),
-                          Text(listPropose[index].description,
-                              style: const TextStyle(
-                                  fontStyle: FontStyle.italic, fontSize: 10)),
-                          Text(
-                            'Status: ${PopPets[index].keterangan}',
-                            style: TextStyle(
-                              fontStyle: FontStyle.italic,
-                              fontSize: 12,
-                              color: PopPets[index].keterangan == 'Available'
-                                  ? Colors.green
-                                  : Colors.red,
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  proposal[index].username,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  proposal[index].description,
+                                  style: const TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Status Proposal: ${proposal[index].status}',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                    color: proposal[index].status == 'Pending'
+                                        ? Colors.grey
+                                        : proposal[index].status == 'Accepted'
+                                            ? Colors.green
+                                            : Colors.red,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ]),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Propose(
-                                      petID: listPropose[index].id,
-                                    )),
-                          );
-                        }),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
-              ));
-        });
-  } else {
-    return const CircularProgressIndicator();
+                );
+              },
+            ),
+    );
   }
 }
